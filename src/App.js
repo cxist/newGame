@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
 import './App.css';
 
-function Game({ game, index, removeGame }) {
-  return (
-    <div classvalue="game">
-      {game.text}
-      <button onClick={() => removeGame(index)}>刪除</button>
-    </div>
-  );
-}
-
-function GameForm({ addGame }) {
+function GameName({ index, addGame, removeGame }) {
   const [value, setValue] = useState('');
-
   const handleSubmit = e => {
     e.preventDefault();
     if (!value) return;
@@ -20,19 +10,23 @@ function GameForm({ addGame }) {
     setValue('');
   };
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        className="gameInput"
-        value={value}
-        onChange={e => setValue(e.target.value)}
-      />
-    </form>
+    <div className="addNewGame">
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          className="gameInput"
+          value={value}
+          placeholder="請輸入新增遊戲名稱"
+          onChange={e => setValue(e.target.value)}
+        />
+      </form>
+      <button onClick={() => removeGame(index)}>刪除</button>
+    </div>
   );
 }
 
 function App() {
-  const [games, setGames] = useState([{ text: '' }]);
+  const [games, setGames] = useState([]);
   const addGame = text => {
     const newGames = [...games, { text }];
     setGames(newGames);
@@ -44,10 +38,18 @@ function App() {
   };
   return (
     <div className="gameList">
-      <GameForm addGame={addGame} />
+      <button onClick={addGame}>新增遊戲</button>
       {games.map((game, index) => (
-        <Game key={index} index={index} game={game} removeGame={removeGame} />
+        <GameName
+          key={index}
+          index={index}
+          game={game}
+          addGame={addGame}
+          removeGame={removeGame}
+        />
       ))}
+      <button>確定</button>
+      <button>全部清除</button>
     </div>
   );
 }
